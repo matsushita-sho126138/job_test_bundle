@@ -1,0 +1,36 @@
+# A sample job for dab_test.
+
+resources:
+  jobs:
+    job_test_main:
+      name: job_test_main
+      tasks:
+        - task_key: taskA
+          notebook_task:
+            notebook_path: ..\src\notebooks\taskA.py
+            
+        - task_key: For_each
+          depends_on:
+            - task_key: taskA
+          for_each_task:
+            inputs: "[1,2,3]"
+            task:
+              task_key: taskB
+              notebook_task:
+                notebook_path: ..\src\notebooks\taskB.py
+                base_parameters:
+                  item: "{{input}}"
+                
+        - task_key: job_test_sub
+          depends_on:
+            - task_key: For_each
+          run_job_task:
+            job_id: 252904427076924
+            job_parameters:
+              param1: "{{job.parameters.target_date}}"
+      queue:
+        enabled: true
+      parameters:
+        - name: target_date
+          default: 2026-11-09
+      performance_target: PERFORMANCE_OPTIMIZED
