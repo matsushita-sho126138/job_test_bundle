@@ -2,8 +2,13 @@
 
 resources:
   jobs:
-    job_test_main:
+    job_test_main:              # dev ターゲットでは "[dev matsushita_sho] job_test_main" という名前になる
       name: job_test_main
+      parameters:
+        - name: target_date
+          default: ""
+        - name: mode
+          default: "normal"
       tasks:
         - task_key: taskA
           notebook_task:
